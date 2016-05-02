@@ -6,10 +6,11 @@ OUTFILE = 'oui_names.txt'
 LOOKUP_FILE = 'oui_names.txt'
 OUI_URL = 'http://standards.ieee.org/develop/regauth/oui/oui.txt'
 REPLACE_CHARS = ['.',':']
+NETWORK_MAC_FILE = '0180c2.txt'
 
 def refresh_lookups(url=OUI_URL,outfile=OUTFILE):
     """ refresh the JSON OUI lookup file """
-    print 'Trying to refresh OUI lookup file; this may take some time...'
+    print('Trying to refresh OUI lookup file; this may take some time...')
     d = {}
     u = requests.get(url)
     lines = u.text.split('\n')
@@ -43,15 +44,22 @@ def get_oui(mac):
     try:
         return oui_table[mac]
     except KeyError:
-        print mac
+        print(mac)
         return 'unknown OUI'
+
+def network_macs(fn=NETWORK_MAC_FILE):
+  oui_table=open(fn, "r").read()
+  print(oui_table)
 
 oui_table = load_lookup_file(LOOKUP_FILE)
 
 def main():
     macs = argv[1:]
     for mac in macs:
-        print get_oui(mac)
+      if '0180c2' in mac:
+          network_macs()
+      else:
+          print(get_oui(mac))
 
 if __name__ == "__main__":
     main()
